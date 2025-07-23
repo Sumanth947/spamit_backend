@@ -16,6 +16,13 @@ const PORT      = process.env.PORT || 5000;
 
 // Only use multer memory storage here for any manual uploads (rarely needed)
 const upload    = multer({ storage: multer.memoryStorage() });
+// Add this debug section at the very top after require('dotenv').config();
+console.log('=== FIREBASE DEBUG ===');
+console.log('FIREBASE_PROJECT_ID:', process.env.FIREBASE_PROJECT_ID ? 'SET' : 'NOT SET');
+console.log('FIREBASE_PRIVATE_KEY:', process.env.FIREBASE_PRIVATE_KEY ? 'SET (length: ' + process.env.FIREBASE_PRIVATE_KEY.length + ')' : 'NOT SET');
+console.log('FIREBASE_CLIENT_EMAIL:', process.env.FIREBASE_CLIENT_EMAIL ? 'SET' : 'NOT SET');
+console.log('FIREBASE_SERVICE_ACCOUNT_KEY_PATH:', process.env.FIREBASE_SERVICE_ACCOUNT_KEY_PATH ? 'SET' : 'NOT SET');
+console.log('=====================');
 
 // Firebase Admin initialization (unchanged)
 try {
