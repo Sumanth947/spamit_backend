@@ -3,7 +3,16 @@ const router  = express.Router();
 const admin   = require('firebase-admin');
 const jwt     = require('jsonwebtoken');
 const User    = require('../models/User');
-
+router.get('/', (req, res) => {
+  res.json({ 
+    message: 'Auth routes are working!',
+    availableEndpoints: [
+      'POST /api/auth/register-or-login',
+      'GET /api/auth/exists?phone=+1234567890'
+    ],
+    firebase: admin.apps.length > 0 ? 'initialized' : 'not initialized'
+  });
+});
 // POST /api/auth/register-or-login
 router.post('/register-or-login', async (req, res) => {
   const { idToken, username: clientName, dob: dobIso } = req.body;
