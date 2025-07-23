@@ -110,15 +110,44 @@ router.post('/register-or-login', async (req, res) => {
 router.get('/exists', async (req, res) => {
   const phone = req.query.phone;
 
+  console.log('🔍 === USER EXISTS CHECK DEBUG ===');
+  console.log('📞 Received phone parameter:', phone);
+  console.log('📞 Phone type:', typeof phone);
+  console.log('📞 Phone length:', phone ? phone.length : 'undefined');
+
   if (!phone) {
+    console.log('❌ Missing phone number in request');
     return res.status(400).json({ error: 'Missing phone number' });
   }
 
   try {
+    // Log the exact database query
+    console.log('🔍 Searching database for phoneNumber:', phone);
+    console.log('🔍 Query: User.findOne({ phoneNumber: "' + phone + '" })');
+    
     const user = await User.findOne({ phoneNumber: phone });
-    res.json({ exists: !!user });
+    
+    console.log('👤 Database query result:', user ? 'FOUND USER' : 'NO USER FOUND');
+    if (user) {
+      console.log('👤 Found user ID:', user._id);
+      console.log('👤 Found user phone:', user.phoneNumber);
+      console.log('👤 Found user name:', user.username);
+    }
+    
+    // Also try a broader search to see what phone numbers exist
+    const allUsers = await User.find({}, 'phoneNumber username').limit(5);
+    console.log('📋 Sample users in database:');
+    allUsers.forEach(u => {
+      console.log(`   - Phone: "${u.phoneNumber}" | Username: "${u.username}"`);
+    });
+    
+    const exists = !!user;
+    console.log('✅ Final result - exists:', exists);
+    console.log('🔍 === END DEBUG ===');
+    
+    res.json({ exists });
   } catch (err) {
-    console.error('check-number error:', err);
+    console.error('❌ Database error:', err);
     res.status(500).json({ error: 'Server error checking user existence' });
   }
 });
